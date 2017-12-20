@@ -1,0 +1,24 @@
+[package]
+name = "spsheet"
+version = "0.0.1"
+authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
+license = "MIT OR Apache-2.0"
+description = "A xlsx or ods read and write spreadsheet library"
+repository = "https://github.com/aoyagikouhei/spsheet-rs"
+keywords = ["xlsx", "ods", "spreadsheet"]
+categories = ["encoding", "parsing", "text-processing"]
+readme = "README.md"
+documentation = "https://docs.rs/spsheet"
+
+[dependencies]
+chrono = { version = "~0.4.0" }
+nom = { version = "~3.2.1" }
+quick-xml = { version = "~0.10.1", optional = true }
+tempdir = { version = "~0.3.5", optional = true }
+time = { version = "~0.1.38", optional = true }
+walkdir = { version = "~2.0.1", optional = true }
+zip = { version = "~0.2.6", optional = true }
+
+[features]
+ods = [ "quick-xml", "tempdir", "walkdir", "zip" ]
+xlsx = [ "quick-xml", "tempdir", "time", "walkdir", "zip" ]
