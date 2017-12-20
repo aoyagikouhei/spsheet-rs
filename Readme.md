@@ -14,8 +14,8 @@ A xlsx or ods read and write library
 - [x] ods Read
 - [x] ods Write
 - [x] Cell Value
-- [-] Cell Format(Date)
-- [ ] Cell Format(Digit)
+- [ ] Cell Date Format(partialy support)
+- [ ] Cell Digit Format
 - [ ] Cell Border
 - [ ] Cell Color
 - [ ] Cell Width
