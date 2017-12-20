@@ -1,13 +1,13 @@
 [package]
 name = "spsheet"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
 license = "MIT OR Apache-2.0"
 description = "A xlsx or ods read and write spreadsheet library"
 repository = "https://github.com/aoyagikouhei/spsheet-rs"
 keywords = ["xlsx", "ods", "spreadsheet"]
 categories = ["encoding", "parsing", "text-processing"]
-readme = "README.md"
+readme = "Readme.md"
 documentation = "https://docs.rs/spsheet"
 
 [dependencies]
