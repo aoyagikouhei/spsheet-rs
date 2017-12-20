@@ -2,7 +2,7 @@
 
 A xlsx or ods read and write library
 
-[Documentation](https://docs.rs/spsheet-rs)
+[Documentation](https://docs.rs/spsheet)
 
 ## Description
 
