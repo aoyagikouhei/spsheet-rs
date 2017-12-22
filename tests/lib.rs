@@ -18,8 +18,11 @@ fn make_sheet1() -> Sheet {
     sheet.add_cell(Cell::str("b"), 0, 1);
     sheet.add_cell(Cell::float(1.0), 1, 0);
     sheet.add_cell(Cell::float(2.0), 1, 1);
-    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("MM\\月DD\\日")), 2, 0);
+    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("MM\\月DD\"日也\"")), 2, 0);
     sheet.add_cell(Cell::date_with_style("2017-12-02T13:30:00", Style::new("YYYY/MM/DD\\ HH:MM:SS")), 2, 1);
+    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("GGGEE")), 2, 2);
+    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("GGEE")), 2, 3);
+    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("GE")), 2, 4);
     sheet
 }
 

@@ -55,16 +55,16 @@ pub fn read(dir: &TempDir) -> result::Result<Vec<HashMap<String, String>>, XlsxE
                         for a in e.attributes().with_checks(false) {
                             match a {
                                 Ok(ref attr) if attr.key == b"numFmtId" => {
-                                    num_fmt_id = get_attribute_value(attr)?
+                                    num_fmt_id = get_attribute_value(attr)?;
                                 },
                                 Ok(ref attr) if attr.key == b"formatCode" => {
-                                    format_code = get_attribute_value(attr)?
+                                    format_code = get_attribute_value(attr)?;
                                 },
                                 Ok(_) => {},
                                 Err(_) => {},
                             }
                         }
-                        num_fmts.insert(num_fmt_id.clone(), format_code.clone());
+                        num_fmts.insert(num_fmt_id.clone(), condvert_character_reference(&format_code));
                     },
                     _ => (),
                 }
