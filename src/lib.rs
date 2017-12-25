@@ -1,5 +1,6 @@
 //! A xlsx or ods read and write library
 extern crate chrono;
+extern crate era_jp;
 
 #[macro_use]
 extern crate nom;
@@ -309,18 +310,10 @@ impl Cell {
         self.style = style;
     }
 
-    pub fn get_formated_date(&self) -> Option<String> {
+    pub fn get_formated_value(&self) -> Option<String> {
         match self.value {
             Value::Date(dt) => {
-                if let Some(formats) = self.style.get_date_formats() {
-                    let mut format = String::new();
-                    for it in formats {
-                        format.push_str(it);
-                    }
-                    Some(dt.format(format.as_str()).to_string())
-                } else {
-                    None
-                }
+                self.style.get_formated_date(&dt)
             },
             _ => None,
         }

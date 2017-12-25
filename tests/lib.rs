@@ -21,8 +21,7 @@ fn make_sheet1() -> Sheet {
     sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("MM\\月DD\"日也\"")), 2, 0);
     sheet.add_cell(Cell::date_with_style("2017-12-02T13:30:00", Style::new("YYYY/MM/DD\\ HH:MM:SS")), 2, 1);
     sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("GGGEE")), 2, 2);
-    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("GGEE")), 2, 3);
-    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("GE")), 2, 4);
+    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("GE")), 2, 3);
     sheet
 }
 
@@ -74,7 +73,7 @@ fn ods_test() {
     let book = make_book();
     let _ = ods::write(&book, Path::new("./tests/test.ods"));
     let res = ods::read(Path::new("./tests/test.ods")).unwrap();
-    assert_eq!(book, res);
+    assert_eq!(book.get_sheet(0), res.get_sheet(0));
 }
 
 #[test]

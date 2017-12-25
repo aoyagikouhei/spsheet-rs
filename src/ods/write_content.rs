@@ -43,7 +43,7 @@ fn make_content_xml_table_cell(writer: &mut Writer<Cursor<Vec<u8>>>, cell: &Cell
                 ("calcext:value-type", "date")
             ], false);
             write_start_tag(writer, "text:p", vec![], false);
-            write_text_node(writer, cell.get_formated_date().unwrap());
+            write_text_node(writer, cell.get_formated_value().unwrap());
         },
     }
     write_end_tag(writer, "text:p");
@@ -180,6 +180,29 @@ fn make_number_format(writer: &mut Writer<Cursor<Vec<u8>>>, formats: &Vec<&str>)
                  write_start_tag(writer, "number:seconds", vec![
                 ], true);
             },
+            "{{era1}}" => {
+                 write_start_tag(writer, "number:year", vec![
+                     ("number:calendar", "gengou"),
+                ], true);
+            },
+            "{{era2}}" => {
+                 write_start_tag(writer, "number:year", vec![
+                     ("number:calendar", "gengou"),
+                     ("number:style", "long"),
+                ], true);
+            },
+            // gengou2 = GG unsupport libreoffice
+            "{{gengou1}}" | "{{gengou2}}" => {
+                 write_start_tag(writer, "number:era", vec![
+                     ("number:calendar", "gengou"),
+                ], true);
+            },
+            "{{gengou3}}" => {
+                 write_start_tag(writer, "number:era", vec![
+                     ("number:calendar", "gengou"),
+                     ("number:style", "long"),
+                ], true);
+            },
             _ => {
                 write_start_tag(writer, "number:text", vec![], false);
                 write_text_node(writer, String::from(*it));
@@ -187,52 +210,6 @@ fn make_number_format(writer: &mut Writer<Cursor<Vec<u8>>>, formats: &Vec<&str>)
             }
         }
     }
-    
-    /*
-    let mut percent_flag = false;
-
-
-    for ch in format.chars() {
-        match ch {
-            '%' => {},
-            'Y' if percent_flag => {
-                write_start_tag(writer, "number:year", vec![
-                    ("number:style", "long"),
-                    ], true);
-            },
-            'y' if percent_flag => {
-                write_start_tag(writer, "number:year", vec![], true);
-            },
-            'm' if percent_flag => {
-                write_start_tag(writer, "number:month", vec![], true);
-            },
-            'd' if percent_flag => {
-                write_start_tag(writer, "number:day", vec![], true);
-            },
-            'H' if percent_flag => {
-                write_start_tag(writer, "number:hours", vec![], true);
-            },
-            'M' if percent_flag => {
-                write_start_tag(writer, "number:minutes", vec![
-                    ("number:style", "long"),
-                    ], true);
-            },
-            'S' if percent_flag => {
-                write_start_tag(writer, "number:seconds", vec![
-                    ("number:style", "long"),
-                    ], true);
-            },
-            _ => {
-                write_start_tag(writer, "number:text", vec![], false);
-                let mut val = String::from("");
-                val.push(ch);
-                write_text_node(writer, val);
-                write_end_tag(writer, "number:text");
-            }
-        }
-        percent_flag = ch == '%';
-    }
-    */
 }
 
 fn make_num_styles(writer: &mut Writer<Cursor<Vec<u8>>>, book: &Book) -> HashMap<String, String> {

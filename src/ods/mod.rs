@@ -113,6 +113,32 @@ fn read_number_format(e: &BytesStart, long_value: &str, short_value: &str) -> re
     }))
 }
 
+fn read_number_year(e: &BytesStart) -> result::Result<String, OdsError> {
+    let mut number_style = String::from("");
+    let mut number_calendar = String::from("");
+    for a in e.attributes().with_checks(false) {
+        match a {
+            Ok(ref attr) if attr.key == b"number:style" => {
+                number_style = get_attribute_value(attr)?;
+            },
+            Ok(ref attr) if attr.key == b"number:calendar" => {
+                number_calendar = get_attribute_value(attr)?;
+            },
+            Ok(_) => {},
+            Err(_) => {},
+        }
+    }
+    Ok(String::from(if number_style == "long" && number_calendar == "gengou" {
+        "EE"
+    } else if number_calendar == "gengou" {
+        "E"
+    } else if number_style == "long" {
+        "YYYY"
+    } else {
+        "YY"
+    }))
+}
+
 fn read_number_date_style(reader: &mut Reader<BufReader<File>>) -> result::Result<String, OdsError> {
     let mut buf = Vec::new();
     let mut style_format = String::from("");
@@ -142,7 +168,8 @@ fn read_number_date_style(reader: &mut Reader<BufReader<File>>) -> result::Resul
             },
             Ok(Event::Empty(ref e)) => {
                 let added_string = match e.name() {
-                    b"number:year" => read_number_format(e, "YYYY", "YY"),
+                    b"number:era" => read_number_format(e, "GGG", "G"),
+                    b"number:year" => read_number_year(e),
                     b"number:month" => read_number_format(e, "MM", "M"),
                     b"number:day" => read_number_format(e, "DD", "D"),
                     b"number:hours" => read_number_format(e, "HH", "H"),

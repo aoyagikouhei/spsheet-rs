@@ -1,6 +1,8 @@
 //! Excel Base Format Style
 use std::borrow::Cow;
 use super::nom::{IResult};
+use chrono::prelude::*;
+use super::era_jp;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Style {
@@ -30,6 +32,41 @@ impl Style {
                     }
                 }
                 Some(result)
+            },
+            _ => None
+        }
+    }
+
+    pub fn get_formated_date(&self, dt: &DateTime<Utc>) -> Option<String> {
+        match ymdhms(self.format.as_str()) {
+            IResult::Done(_, output) => {
+                let mut format = String::from("");
+                let era_year = era_jp::get_year(dt);
+                for item_ary in output {
+                    for item in item_ary {
+                        match item {
+                            "{{era1}}" => {
+                                format = format!("{}{}", format, era_year);
+                            },
+                            "{{era2}}" => {
+                                format = format!("{}{:>02}", format, era_year);
+                            },
+                            "{{gengou1}}" => {
+                                format.push_str(era_jp::get_abbreviation_name(&dt));
+                            },
+                            "{{gengou2}}" => {
+                                format.push_str(era_jp::get_short_name(&dt));
+                            },
+                            "{{gengou3}}" => {
+                                format.push_str(era_jp::get_name(&dt));
+                            },
+                            _ => {
+                                format.push_str(item);
+                            }
+                        }
+                    }
+                }
+                Some(dt.format(format.as_str()).to_string())
             },
             _ => None
         }
