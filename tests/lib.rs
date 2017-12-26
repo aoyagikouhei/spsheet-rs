@@ -73,7 +73,7 @@ fn ods_test() {
     let book = make_book();
     let _ = ods::write(&book, Path::new("./tests/test.ods"));
     let res = ods::read(Path::new("./tests/test.ods")).unwrap();
-    assert_eq!(book.get_sheet(0), res.get_sheet(0));
+    assert_eq!(book, res);
 }
 
 #[test]

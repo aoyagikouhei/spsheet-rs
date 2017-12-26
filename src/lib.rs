@@ -276,13 +276,13 @@ impl Cell {
             Value::Float(value),
             Style::new(""))
     }
-
+/*
     pub fn date<'a, S>(value: S) -> Cell 
         where S: Into<Cow<'a, str>>
     {
         Cell::date_with_style(value, Style::new("%Y-%m-%d"))
     }
-
+*/
     pub fn date_with_style<'a, S>(value: S, style: Style) -> Cell 
         where S: Into<Cow<'a, str>>
     {
@@ -329,4 +329,6 @@ pub enum Value {
     Float(f64),
     /// Data Value
     Date(DateTime<Utc>),
+    /// Currency Value
+    Currency(f64),
 }

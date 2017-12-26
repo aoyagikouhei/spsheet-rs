@@ -25,12 +25,17 @@ fn make_content_xml_none_table_cell(writer: &mut Writer<Cursor<Vec<u8>>>, none_c
 fn make_content_xml_table_cell(writer: &mut Writer<Cursor<Vec<u8>>>, cell: &Cell, date_hash: &HashMap<String, String>) {
     match cell.get_value() {
         &Value::Str(ref value) => {
-            write_start_tag(writer, "table:table-cell", vec![("office:value-type", "string"), ("calcext:value-type", "string")], false);
+            write_start_tag(writer, "table:table-cell", vec![
+                ("office:value-type", "string"), 
+                ("calcext:value-type", "string")], false);
             write_start_tag(writer, "text:p", vec![], false);
             write_text_node(writer, value.to_string());
         },
         &Value::Float(ref value) => {
-            write_start_tag(writer, "table:table-cell", vec![("office:value-type", "float"), ("office:value", value.to_string().as_str()), ("calcext:value-type", "float")], false);
+            write_start_tag(writer, "table:table-cell", vec![
+                ("office:value-type", "float"), 
+                ("office:value", value.to_string().as_str()), 
+                ("calcext:value-type", "float")], false);
             write_start_tag(writer, "text:p", vec![], false);
             write_text_node(writer, value.to_string());
         },
@@ -41,6 +46,17 @@ fn make_content_xml_table_cell(writer: &mut Writer<Cursor<Vec<u8>>>, cell: &Cell
                 ("office:value-type", "date"), 
                 ("office:date-value", value.format("%Y-%m-%dT%H:%M:%S").to_string().as_str()), 
                 ("calcext:value-type", "date")
+            ], false);
+            write_start_tag(writer, "text:p", vec![], false);
+            write_text_node(writer, cell.get_formated_value().unwrap());
+        },
+        &Value::Currency(ref value) => {
+            let formater = cell.get_style().get_format();
+            write_start_tag(writer, "table:table-cell", vec![
+                ("table:style-name", date_hash.get(formater).unwrap().as_str()), 
+                ("office:value-type", "currency"), 
+                ("office:date-value", value.to_string().as_str()), 
+                ("calcext:value-type", "currency")
             ], false);
             write_start_tag(writer, "text:p", vec![], false);
             write_text_node(writer, cell.get_formated_value().unwrap());

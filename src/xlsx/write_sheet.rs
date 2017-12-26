@@ -95,6 +95,16 @@ pub fn write(sheet: &Sheet, dir: &TempDir, shared_strings: &HashMap<String, usiz
                     write_start_tag(&mut writer, "v", vec![], false);
                     write_text_node(&mut writer, datetime_to_serail(val).to_string().as_str());
                 },
+                &Value::Currency(ref val) => {
+                    let s_value = format_map.get(format).unwrap();
+                    write_start_tag(&mut writer, "c", vec![
+                        ("r", &col_str),
+                        ("s", s_value.to_string().as_str()),
+                        ("t", "n"),
+                    ], false);
+                    write_start_tag(&mut writer, "v", vec![], false);
+                    write_text_node(&mut writer, val.to_string().as_str());
+                },
             }
             write_end_tag(&mut writer, "v");
             write_end_tag(&mut writer, "c");
