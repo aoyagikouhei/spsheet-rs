@@ -261,3 +261,56 @@ named!(ymdhms<&str, Vec<Vec<&str>> >,
         map!(word, |x| vec![x])
     ))
 );
+
+named!(currency_jp<&str, &str>, 
+    map!(tag_s!("[$￥-411]"), |_| "{{currency_jp}}")
+);
+
+named!(red<&str, &str>, 
+    map!(alt!(tag_s!("[赤]") | tag_s!("[RED]")), |_| "{{red}}")
+);
+
+named!(black<&str, &str>, 
+    map!(alt!(tag_s!("[黒]") | tag_s!("[BLACK]")), |_| "{{black}}")
+);
+
+named!(color<&str, &str>,
+    alt!(red | black)
+);
+
+named!(number<&str, &str>,
+    take_while1_s!(call!(|c| c == '0' || c == '#' || c == '.' || c == ',' || c == '?'))
+);
+
+named!(numeric<&str, Vec<&str> >,
+    do_parse!(
+        c: opt!(color) >>
+        w1: many0!(alt!(word | currency_jp)) >>
+        nums: number >>
+        w2: many0!(alt!(word | currency_jp)) >>
+        ({
+            let mut res = vec![];
+            if let Some(n) = c {
+                res.push(n);
+            }
+            for item in w1 {
+                res.push(item);
+            }
+            res.push(nums);
+            for item in w2 {
+                res.push(item);
+            }
+            res
+        })
+    )
+);
+
+named!(numeric_ary<&str, Vec<Vec<&str> > >,
+    many_m_n!(1,4,
+        do_parse!(
+            opt!(tag_s!(";")) >>
+            res: numeric >>
+            (res)
+        )
+    )
+);
