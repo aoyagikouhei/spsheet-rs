@@ -9,8 +9,8 @@ use chrono::prelude::*;
 use std::collections::HashMap;
 use std::borrow::Cow;
 
-pub mod style;
-use style::Style;
+pub mod format;
+use format::Format;
 
 #[cfg(feature = "ods")]
 pub mod ods;
@@ -242,48 +242,46 @@ impl Sheet {
     }
 }
 
-/// Cell has owner of value and style.
+/// Cell has owner of value.
 ///
 /// ```
-/// let _ = spsheet::Cell::str("value");
+/// let _ = spsheet::Cell::str("value", "");
 /// ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct Cell {
     value: Value,
-    style: Style,
+    format: Format,
 }
 
 impl Cell {
-    pub fn new(value: Value, style: Style) -> Cell
+    pub fn new<'a, S>(value: Value, content: S) -> Cell
+        where S: Into<Cow<'a, str>>
     {
         Cell {
-            value,
-            style,
+            value: value,
+            format: Format::new(content),
         }
     }
 
-    pub fn str<'a, S>(value: S) -> Cell 
+    pub fn str<'a, S>(value: S, format: S) -> Cell 
         where S: Into<Cow<'a, str>>
     {
         Cell::new(
             Value::Str(value.into().into_owned()),
-            Style::new(""))
+            format
+        )
     }
 
-    pub fn float(value: f64) -> Cell 
+    pub fn float<'a, S>(value: f64, format: S) -> Cell
+        where S: Into<Cow<'a, str>>
     {
         Cell::new(
             Value::Float(value),
-            Style::new(""))
+            format
+        )
     }
-/*
-    pub fn date<'a, S>(value: S) -> Cell 
-        where S: Into<Cow<'a, str>>
-    {
-        Cell::date_with_style(value, Style::new("%Y-%m-%d"))
-    }
-*/
-    pub fn date_with_style<'a, S>(value: S, style: Style) -> Cell 
+
+    pub fn date<'a, S>(value: S, format: S) -> Cell 
         where S: Into<Cow<'a, str>>
     {
         let mut str_value = value.into().into_owned();
@@ -294,7 +292,7 @@ impl Cell {
         str_value.push_str(postfix);
         Cell::new(
             Value::Date(str_value.parse::<DateTime<Utc>>().unwrap()),
-            style
+            format
         )
     }
 
@@ -302,18 +300,14 @@ impl Cell {
         &self.value
     }
 
-    pub fn get_style(&self) -> &Style {
-        &self.style
-    }
-
-    pub fn set_style(&mut self, style: Style) {
-        self.style = style;
+    pub fn get_format(&self) -> &Format {
+        &self.format
     }
 
     pub fn get_formated_value(&self) -> Option<String> {
         match self.value {
             Value::Date(dt) => {
-                self.style.get_formated_date(&dt)
+                self.format.get_formated_date(&dt)
             },
             _ => None,
         }

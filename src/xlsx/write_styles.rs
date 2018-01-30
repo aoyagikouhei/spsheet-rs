@@ -18,7 +18,7 @@ fn make_num_fmts(writer: &mut Writer<Cursor<Vec<u8>>>, book: &Book) -> Vec<HashM
         sheet.walk_through(|_, _, cell| {
             match cell.get_value() {
                 &Value::Date(_) => {
-                    let format = cell.get_style().get_format();
+                    let format = cell.get_format().get_content();
                     if !key_map.contains_key(format) {
                         let mut map = HashMap::new();
                         map.insert(String::from("numFmtId"), num_fmot_id.to_string());

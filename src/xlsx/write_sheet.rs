@@ -64,7 +64,7 @@ pub fn write(sheet: &Sheet, dir: &TempDir, shared_strings: &HashMap<String, usiz
             }
             let col_str = format!(
                 "{}{}", index_to_column(column_index), row_str);
-            let format = cell.get_style().get_format();
+            let format = cell.get_format().get_content();
             match cell.get_value() {
                 &Value::Str(ref val) => {
                     write_start_tag(&mut writer, "c", vec![

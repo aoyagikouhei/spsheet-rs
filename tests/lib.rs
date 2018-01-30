@@ -2,7 +2,7 @@
 
 extern crate spsheet;
 use spsheet::{Book,Sheet,Cell,column_to_index,index_to_column,column_and_row_to_index};
-use spsheet::style::Style;
+use spsheet::format::Format;
 
 use std::path::Path;
 
@@ -14,32 +14,32 @@ use spsheet::xlsx;
 
 fn make_sheet1() -> Sheet {
     let mut sheet = Sheet::new("シート1");
-    sheet.add_cell(Cell::str("a"), 0, 0);
-    sheet.add_cell(Cell::str("b"), 0, 1);
-    sheet.add_cell(Cell::float(1.0), 1, 0);
-    sheet.add_cell(Cell::float(2.0), 1, 1);
-    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("MM\\月DD\"日也\"")), 2, 0);
-    sheet.add_cell(Cell::date_with_style("2017-12-02T13:30:00", Style::new("YYYY/MM/DD\\ HH:MM:SS")), 2, 1);
-    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("GGGEE")), 2, 2);
-    sheet.add_cell(Cell::date_with_style("2017-12-02", Style::new("GE")), 2, 3);
+    sheet.add_cell(Cell::str("a", ""), 0, 0);
+    sheet.add_cell(Cell::str("b", ""), 0, 1);
+    sheet.add_cell(Cell::float(1.0, ""), 1, 0);
+    sheet.add_cell(Cell::float(2.0, ""), 1, 1);
+    sheet.add_cell(Cell::date("2017-12-02", "MM\\月DD\"日也\""), 2, 0);
+    sheet.add_cell(Cell::date("2017-12-02T13:30:00", "YYYY/MM/DD\\ HH:MM:SS"), 2, 1);
+    sheet.add_cell(Cell::date("2017-12-02", "GGGEE"), 2, 2);
+    sheet.add_cell(Cell::date("2017-12-02", "GE"), 2, 3);
     sheet
 }
 
 fn make_sheet2() -> Sheet {
     let mut sheet = Sheet::new("シート2");
-    sheet.add_cell(Cell::str("予定表～①ﾊﾝｶｸだ"), 0, 0);
+    sheet.add_cell(Cell::str("予定表～①ﾊﾝｶｸだ", ""), 0, 0);
     sheet
 }
 
 fn make_sheet3() -> Sheet {
     let mut sheet = Sheet::new("シート3");
-    sheet.add_cell(Cell::str("a"), 0, 0);
-    sheet.add_cell(Cell::str("b"), 0, 2);
-    sheet.add_cell(Cell::str("c"), 2, 0);
-    sheet.add_cell(Cell::str("d"), 2, 2);
-    sheet.add_cell(Cell::str("e"), 2, 4);
-    sheet.add_cell(Cell::str("f"), 4, 0);
-    sheet.add_cell(Cell::str("g"), 4, 4);
+    sheet.add_cell(Cell::str("a", ""), 0, 0);
+    sheet.add_cell(Cell::str("b", ""), 0, 2);
+    sheet.add_cell(Cell::str("c", ""), 2, 0);
+    sheet.add_cell(Cell::str("d", ""), 2, 2);
+    sheet.add_cell(Cell::str("e", ""), 2, 4);
+    sheet.add_cell(Cell::str("f", ""), 4, 0);
+    sheet.add_cell(Cell::str("g", ""), 4, 4);
     sheet
 }
 
@@ -83,4 +83,8 @@ fn xlsx_test() {
     let _ = xlsx::write(&book, Path::new("./tests/test.xlsx"));
     let res = xlsx::read(Path::new("./tests/test.xlsx")).unwrap();
     assert_eq!(book, res);
+}
+
+#[test]
+fn format_test() {
 }

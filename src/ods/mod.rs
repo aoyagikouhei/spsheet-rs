@@ -3,7 +3,7 @@ extern crate quick_xml;
 extern crate tempdir;
 extern crate zip;
 
-use super::{Book,Sheet,Cell,Value,Style};
+use super::{Book,Sheet,Cell,Value};
 use std::path::Path;
 use self::tempdir::TempDir;
 use std::io;

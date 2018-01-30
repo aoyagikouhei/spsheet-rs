@@ -1,29 +1,47 @@
-//! Excel Base Format Style
+//! Excel Base Format
 use std::borrow::Cow;
 use super::nom::{IResult};
 use chrono::prelude::*;
 use super::era_jp;
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct Style {
-    format: String,
+pub struct Format {
+    content: String,
 }
 
-impl Style {
-    pub fn new<'a, S>(format: S) -> Style 
+impl Format {
+    pub fn new<'a, S>(content: S) -> Format 
          where S: Into<Cow<'a, str>>
     {
-        Style {
-            format: format.into().into_owned(),
+        Format {
+            content: content.into().into_owned(),
         }
     }
 
-    pub fn get_format(&self) -> &String {
-        &self.format
+    fn is_ymdhm<'a, S>(value: S) -> bool 
+        where S: Into<Cow<'a, str>>
+    {
+        match ymdhms(value.into().into_owned().as_str()) {
+            IResult::Done(_, output) => true,
+            _ => false
+        }
+    }
+
+    fn is_numeric_ary<'a, S>(value: S) -> bool 
+    where S: Into<Cow<'a, str>>
+    {
+        match numeric_ary(value.into().into_owned().as_str()) {
+            IResult::Done(_, output) => true,
+            _ => false
+        }
+    }
+
+    pub fn get_content(&self) -> &String {
+        &self.content
     }
 
     pub fn get_date_formats(&self) -> Option<Vec<&str>> {
-        match ymdhms(self.format.as_str()) {
+        match ymdhms(self.content.as_str()) {
             IResult::Done(_, output) => {
                 let mut result = vec![];
                 for i in output {
@@ -38,7 +56,7 @@ impl Style {
     }
 
     pub fn get_formated_date(&self, dt: &DateTime<Utc>) -> Option<String> {
-        match ymdhms(self.format.as_str()) {
+        match ymdhms(self.content.as_str()) {
             IResult::Done(_, output) => {
                 let mut format = String::from("");
                 let era_year = era_jp::get_year(dt);

@@ -1,4 +1,4 @@
-use super::{Book,Sheet,Cell,Style};
+use super::{Book,Sheet,Cell};
 use file_common::*;
 use super::quick_xml::reader::Reader;
 use super::quick_xml::events::{Event};
@@ -96,11 +96,11 @@ pub fn read(dir: &TempDir, style_content: &StyleContent) -> Result<Book> {
                     b"table:table-cell" => {
                         match cell_type.as_str() {
                             "string" => {
-                                let cell = Cell::str(str_value.clone());
+                                let cell = Cell::str(str_value.clone(), String::from(""));
                                 sheet.add_cell(cell, row, column);
                             },
                             "float" => {
-                                let cell = Cell::float(float_value);
+                                let cell = Cell::float(float_value, "");
                                 sheet.add_cell(cell, row, column);
                             },
                             "date" => {
@@ -108,7 +108,7 @@ pub fn read(dir: &TempDir, style_content: &StyleContent) -> Result<Book> {
                                     Some(value) => value.clone(),
                                     None => String::from(""),
                                 };
-                                let cell = Cell::date_with_style(date_value.clone(), Style::new(format));
+                                let cell = Cell::date(date_value.clone(), format);
                                 sheet.add_cell(cell, row, column);
                             },
                             _ => {},

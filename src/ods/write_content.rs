@@ -40,7 +40,7 @@ fn make_content_xml_table_cell(writer: &mut Writer<Cursor<Vec<u8>>>, cell: &Cell
             write_text_node(writer, value.to_string());
         },
         &Value::Date(ref value) => {
-            let formater = cell.get_style().get_format();
+            let formater = cell.get_format().get_content();
             write_start_tag(writer, "table:table-cell", vec![
                 ("table:style-name", date_hash.get(formater).unwrap().as_str()), 
                 ("office:value-type", "date"), 
@@ -51,7 +51,7 @@ fn make_content_xml_table_cell(writer: &mut Writer<Cursor<Vec<u8>>>, cell: &Cell
             write_text_node(writer, cell.get_formated_value().unwrap());
         },
         &Value::Currency(ref value) => {
-            let formater = cell.get_style().get_format();
+            let formater = cell.get_format().get_content();
             write_start_tag(writer, "table:table-cell", vec![
                 ("table:style-name", date_hash.get(formater).unwrap().as_str()), 
                 ("office:value-type", "currency"), 
@@ -235,7 +235,7 @@ fn make_num_styles(writer: &mut Writer<Cursor<Vec<u8>>>, book: &Book) -> HashMap
         sheet.walk_through(|_, _, cell| {
             match cell.get_value() {
                 &Value::Date(_) => {
-                    let format = cell.get_style().get_format();
+                    let format = cell.get_format().get_content();
                     if !result.contains_key(format) {
                         count = count + 1;
                         let n_name = format!("N{}", count);
@@ -245,7 +245,7 @@ fn make_num_styles(writer: &mut Writer<Cursor<Vec<u8>>>, book: &Book) -> HashMap
                             ("style:name", n_name.as_str()),
                             ("number:automatic-order", "true"),
                             ], false);
-                        make_number_format(writer, &cell.get_style().get_date_formats().unwrap());
+                        make_number_format(writer, &cell.get_format().get_date_formats().unwrap());
                         write_end_tag(writer, "number:date-style");
                         write_start_tag(writer, "style:style", vec![
                             ("style:name", s_name.as_str()),

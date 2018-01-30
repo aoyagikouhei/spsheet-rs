@@ -15,7 +15,7 @@ use std::fs::File;
 use std::string::FromUtf8Error;
 use self::chrono::prelude::*;
 use self::tempdir::TempDir;
-use super::{Book,Sheet,Cell,Value,Style,column_and_row_to_index,index_to_column};
+use super::{Book,Sheet,Cell,Value,column_and_row_to_index,index_to_column};
 
 mod read_sheet;
 mod read_shared_strings;

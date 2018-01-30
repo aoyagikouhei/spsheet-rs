@@ -7,7 +7,7 @@ use super::quick_xml::reader::Reader;
 use super::quick_xml::events::{Event};
 use super::tempdir::TempDir;
 use super::XlsxError;
-use super::{Sheet,Cell,Style,Value,column_and_row_to_index};
+use super::{Sheet,Cell,Value,column_and_row_to_index};
 
 pub fn read(dir: &TempDir, name: &String, target: &String, shared_strings: &Vec<String>, styles: &Vec<HashMap<String, String>>) -> result::Result<Sheet, XlsxError> {
     let mut sheet = Sheet::new(name.as_str());
@@ -68,18 +68,18 @@ pub fn read(dir: &TempDir, name: &String, target: &String, shared_strings: &Vec<
                         let cell = if type_value == "s" {
                             let index = string_value.parse::<usize>().unwrap();
                             let val = shared_strings.get(index).unwrap();
-                            Cell::str((*val).clone())
+                            Cell::str((*val).clone(), String::from(""))
                         } else {
                             let hash = &styles[style_index];
                             match hash.get("formatCode") {
                                 Some(format_code) => {
                                     Cell::new(
                                         Value::Date(number_to_date(&string_value)), 
-                                        Style::new(format_code.to_string())
+                                        format_code.to_string()
                                     )
                                 },
                                 None => {
-                                    Cell::float(string_value.parse::<f64>().unwrap())
+                                    Cell::float(string_value.parse::<f64>().unwrap(), "")
                                 }
                             }
                         };
