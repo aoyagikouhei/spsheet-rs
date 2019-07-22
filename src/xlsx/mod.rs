@@ -43,7 +43,7 @@ const RELS_CONTENT: &'static str = r#"<?xml version="1.0" encoding="UTF-8"?>
 #[derive(Debug)]
 pub enum XlsxError {
     Io(io::Error),
-    Xml(quick_xml::errors::Error),
+    Xml(quick_xml::Error),
     Zip(zip::result::ZipError),
     Uft8(FromUtf8Error),
 }
@@ -54,8 +54,8 @@ impl From<io::Error> for XlsxError {
     }
 }
 
-impl From<quick_xml::errors::Error> for XlsxError {
-    fn from(err: quick_xml::errors::Error) -> XlsxError {
+impl From<quick_xml::Error> for XlsxError {
+    fn from(err: quick_xml::Error) -> XlsxError {
         XlsxError::Xml(err)
     }
 }
@@ -98,9 +98,9 @@ pub fn read(path: &Path) -> Result<Book> {
             let sheet_target = rels_map.get(s.get("rid").unwrap()).unwrap();
             book.add_sheet(
                 read_sheet::read(
-                    &dir, s.get("name").unwrap(), 
-                    sheet_target, 
-                    &shared_strings, 
+                    &dir, s.get("name").unwrap(),
+                    sheet_target,
+                    &shared_strings,
                     &styles)?);
         }
     }
@@ -113,20 +113,20 @@ pub fn write(book: &Book, path: &Path) -> result::Result<(), XlsxError> {
     let now = Utc::now();
     let now_str = now.format("%Y-%m-%dT%H:%M:%SZ").to_string();
     let _ = make_static_file(
-        &dir, RELS, 
-        RELS_CONTENT, 
+        &dir, RELS,
+        RELS_CONTENT,
         Some("_rels"))?;
     let _ = make_static_file(
-        &dir, "[Content_Types].xml", 
-        CONTENT_TYPE_XML, 
+        &dir, "[Content_Types].xml",
+        CONTENT_TYPE_XML,
         None)?;
     let _ = make_static_file(
-        &dir, "docProps/app.xml", 
-        APP_XML, 
+        &dir, "docProps/app.xml",
+        APP_XML,
         Some("docProps"))?;
     let _ = make_static_file(
-        &dir, "docProps/core.xml", 
-        CORE_XML.replace("XXXXXXXXXX", now_str.as_str()).as_str(), 
+        &dir, "docProps/core.xml",
+        CORE_XML.replace("XXXXXXXXXX", now_str.as_str()).as_str(),
         Some("docProps"))?;
     let format_map = write_styles::write(book, &dir)?;
     let shared_strings = write_shared_strings::write(book, &dir)?;

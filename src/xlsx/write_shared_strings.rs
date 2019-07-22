@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::io::Cursor;
 use std::result;
 use super::quick_xml::events::{Event, BytesDecl};
-use super::quick_xml::writer::Writer;
+use super::quick_xml::Writer;
 use super::tempdir::TempDir;
 use super::{Book,Value};
 use super::XlsxError;
@@ -31,8 +31,8 @@ pub fn write(book: &Book, dir: &TempDir) -> result::Result<HashMap<String, usize
         BytesDecl::new(b"1.0", Some(b"UTF-8"), Some(b"yes"))));
     write_text_node(&mut writer, "\n");
     write_start_tag(&mut writer, "sst", vec![
-        ("xmlns", "http://schemas.openxmlformats.org/spreadsheetml/2006/main"), 
-        ("count", count.to_string().as_str()), 
+        ("xmlns", "http://schemas.openxmlformats.org/spreadsheetml/2006/main"),
+        ("count", count.to_string().as_str()),
         ("uniqueCount", shared_strings.len().to_string().as_str())], false);
     let mut map: HashMap<String, usize> = HashMap::new();
     let mut index = 0;

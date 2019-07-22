@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::result;
 use super::time::Duration;
 use super::chrono::prelude::*;
-use super::quick_xml::reader::Reader;
+use super::quick_xml::Reader;
 use super::quick_xml::events::{Event};
 use super::tempdir::TempDir;
 use super::XlsxError;
@@ -74,7 +74,7 @@ pub fn read(dir: &TempDir, name: &String, target: &String, shared_strings: &Vec<
                             match hash.get("formatCode") {
                                 Some(format_code) => {
                                     Cell::new(
-                                        Value::Date(number_to_date(&string_value)), 
+                                        Value::Date(number_to_date(&string_value)),
                                         format_code.to_string()
                                     )
                                 },

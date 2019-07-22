@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::io::Cursor;
 use std::result;
 use super::quick_xml::events::{Event, BytesDecl};
-use super::quick_xml::writer::Writer;
+use super::quick_xml::Writer;
 use super::tempdir::TempDir;
 use super::{Book, Value};
 use super::XlsxError;
@@ -102,9 +102,9 @@ pub fn write(book: &Book, dir: &TempDir) -> result::Result<HashMap<String, usize
         BytesDecl::new(b"1.0", Some(b"UTF-8"), Some(b"yes"))));
     write_text_node(&mut writer, "\n");
     write_start_tag(&mut writer, "styleSheet", vec![("xmlns", "http://schemas.openxmlformats.org/spreadsheetml/2006/main"),("xmlns:x14ac", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"),("xmlns:mc", "http://schemas.openxmlformats.org/markup-compatibility/2006"),], false);
-    
+
     let num_fmts = make_num_fmts(&mut writer, book);
-    
+
     write_start_tag(&mut writer, "fonts", vec![("count", "2"),], false);
     write_start_tag(&mut writer, "font", vec![], false);
     write_start_tag(&mut writer, "sz", vec![("val", "10.0"),], false);
@@ -145,7 +145,7 @@ pub fn write(book: &Book, dir: &TempDir) -> result::Result<HashMap<String, usize
     write_start_tag(&mut writer, "dxfs", vec![("count", "0"),], false);
     write_end_tag(&mut writer, "dxfs");
     write_end_tag(&mut writer, "styleSheet");
-    
+
     let _ = make_file_from_writer(STYLE_XML, dir, writer, Some("xl"))?;
     Ok(result)
 }
