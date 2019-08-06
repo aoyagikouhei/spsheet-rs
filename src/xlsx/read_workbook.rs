@@ -1,7 +1,7 @@
 use file_common::*;
 use std::collections::HashMap;
 use std::result;
-use super::quick_xml::reader::Reader;
+use super::quick_xml::Reader;
 use super::quick_xml::events::{Event};
 use super::tempdir::TempDir;
 use super::XlsxError;

@@ -2,7 +2,7 @@ use file_common::*;
 use std::io::Cursor;
 use std::result;
 use super::quick_xml::events::{Event, BytesDecl};
-use super::quick_xml::writer::Writer;
+use super::quick_xml::Writer;
 use super::tempdir::TempDir;
 use super::{Book};
 use super::XlsxError;

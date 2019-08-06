@@ -1,5 +1,5 @@
 use file_common::*;
-use super::quick_xml::reader::Reader;
+use super::quick_xml::Reader;
 use super::quick_xml::events::{Event};
 use super::tempdir::TempDir;
 use std::collections::HashMap;
@@ -14,7 +14,7 @@ pub struct StyleContent {
 
 pub fn read(dir: &TempDir) -> Result<StyleContent, OdsError> {
     let mut date_style_map = HashMap::new();
-    
+
     let path = dir.path().join(STYLES_XML);
     let mut reader = Reader::from_file(path)?;
 
@@ -29,7 +29,7 @@ pub fn read(dir: &TempDir) -> Result<StyleContent, OdsError> {
                             match a {
                                 Ok(ref attr) if attr.key == b"style:name" => {
                                     date_style_map.insert(
-                                        get_attribute_value(attr)?, 
+                                        get_attribute_value(attr)?,
                                         super::read_number_date_style(&mut reader)?);
                                 },
                                 Ok(_) => {},

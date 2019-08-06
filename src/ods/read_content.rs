@@ -1,6 +1,6 @@
 use super::{Book,Sheet,Cell};
 use file_common::*;
-use super::quick_xml::reader::Reader;
+use super::quick_xml::Reader;
 use super::quick_xml::events::{Event};
 use super::tempdir::TempDir;
 use super::{Result};
@@ -70,7 +70,7 @@ pub fn read(dir: &TempDir, style_content: &StyleContent) -> Result<Book> {
                             match a {
                                 Ok(ref attr) if attr.key == b"style:name" => {
                                     date_style_map.insert(
-                                        get_attribute_value(attr)?, 
+                                        get_attribute_value(attr)?,
                                         super::read_number_date_style(&mut reader)?);
                                 },
                                 Ok(_) => {},
